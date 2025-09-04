@@ -18,13 +18,15 @@
   "author": "",
   "license": "ISC",
   "description": "",
+   "lint-staged": {
   "*.{js,jsx,ts,tsx}": [
     "eslint --fix",
     "prettier --write"
   ],
   "*.{json,md,yml,yaml}": [
     "prettier --write"
-  ],
+  ]
+},
   "devDependencies": {
     "@eslint/js": "^9.34.0",
     "@types/cors": "^2.8.19",
