@@ -13,6 +13,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/health", (_req:Request, res:Response)=>{
 
+  console.log("test husky");
+
     res.status(200).json({message:"OK"})
 
 })
