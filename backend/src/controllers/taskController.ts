@@ -25,14 +25,10 @@ export const getAllTasks = catchAsync(async (req: Request, res: Response) => {
 
 export const getTask = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
-  const taskId = req.params.id;
+  const taskId = req.params.id!;
 
   if (!userId) {
     throw new ApiError('Unauthorized', 'Unauthorized', 401);
-  }
-
-  if (!taskId) {
-    throw new ApiError('Task ID is required', 'Task ID is required', 400);
   }
 
   const task = await db.tasks.findById(taskId);
@@ -77,14 +73,10 @@ export const createTask = catchAsync(async (req: Request, res: Response) => {
 
 export const updateTask = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
-  const taskId = req.params.id;
+  const taskId = req.params.id!;
 
   if (!userId) {
     throw new ApiError('Unauthorized', 'Unauthorized', 401);
-  }
-
-  if (!taskId) {
-    throw new ApiError('Task ID is required', 'Task ID is required', 400);
   }
 
   const task = await db.tasks.findById(taskId);
@@ -109,14 +101,10 @@ export const updateTask = catchAsync(async (req: Request, res: Response) => {
 
 export const deleteTask = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
-  const taskId = req.params.id;
+  const taskId = req.params.id!;
 
   if (!userId) {
     throw new ApiError('Unauthorized', 'Unauthorized', 401);
-  }
-
-  if (!taskId) {
-    throw new ApiError('Task ID is required', 'Task ID is required', 400);
   }
 
   const task = await db.tasks.findById(taskId);

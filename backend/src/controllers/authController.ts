@@ -7,34 +7,6 @@ const authService = AuthService.getInstance();
 export const register = catchAsync(async (req: Request, res: Response): Promise<void> => {
   const { email, password, name }: RegisterData = req.body;
 
-  // Validate required fields
-  if (!email || !password) {
-    res.status(400).json({
-      status: 'error',
-      message: 'Email and password are required',
-    });
-    return;
-  }
-
-  // Validate email format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    res.status(400).json({
-      status: 'error',
-      message: 'Invalid email format',
-    });
-    return;
-  }
-
-  // Validate password strength
-  if (password.length < 6) {
-    res.status(400).json({
-      status: 'error',
-      message: 'Password must be at least 6 characters long',
-    });
-    return;
-  }
-
   const result = await authService.register({ email, password, name });
 
   // Remove password from response
@@ -53,15 +25,6 @@ export const register = catchAsync(async (req: Request, res: Response): Promise<
 export const login = catchAsync(async (req: Request, res: Response): Promise<void> => {
   const { email, password }: LoginData = req.body;
 
-  // Validate required fields
-  if (!email || !password) {
-    res.status(400).json({
-      status: 'error',
-      message: 'Email and password are required',
-    });
-    return;
-  }
-
   const result = await authService.login({ email, password });
 
   // Remove password from response
@@ -79,14 +42,6 @@ export const login = catchAsync(async (req: Request, res: Response): Promise<voi
 
 export const refreshToken = catchAsync(async (req: Request, res: Response): Promise<void> => {
   const { refreshToken } = req.body;
-
-  if (!refreshToken) {
-    res.status(400).json({
-      status: 'error',
-      message: 'Refresh token is required',
-    });
-    return;
-  }
 
   const tokens = await authService.refreshToken(refreshToken);
 
