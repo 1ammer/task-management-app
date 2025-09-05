@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import toast from 'react-hot-toast';
 import apiService from '../../services/api';
@@ -15,6 +16,7 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate, onDelete }) => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -56,6 +58,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate, onDelete }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleEdit = () => {
+    navigate(`/tasks/edit/${task.id}`);
   };
 
   const handleDelete = async () => {
@@ -105,6 +111,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate, onDelete }) => {
             title={task.completed ? 'Mark as incomplete' : 'Mark as complete'}
           >
             {task.completed ? '✓' : '○'}
+          </button>
+          
+          <button
+            onClick={handleEdit}
+            disabled={isLoading}
+            className="task-action-btn edit-btn"
+            title="Edit task"
+          >
+            ✏️
           </button>
           
           <button
