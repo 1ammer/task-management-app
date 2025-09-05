@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../../hooks/useAuth';
-import { useNotification } from '../../hooks/useNotification';
 import LoadingSpinner from '../common/LoadingSpinner';
 import './AuthForm.css';
 
@@ -14,7 +14,6 @@ const LoginForm: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { login } = useAuth();
-  const { showError, showSuccess } = useNotification();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -47,12 +46,12 @@ const LoginForm: React.FC = () => {
     setIsLoading(true);
     try {
       await login(formData);
-      showSuccess('Login successful!');
+      toast.success('Login successful!');
       navigate(from, { replace: true });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Login error:', error);
-      const message = error.response?.data?.message || 'Login failed. Please try again.';
-      showError(message);
+      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Login failed. Please try again.';
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

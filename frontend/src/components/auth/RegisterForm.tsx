@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../../hooks/useAuth';
-import { useNotification } from '../../hooks/useNotification';
 import LoadingSpinner from '../common/LoadingSpinner';
 import './AuthForm.css';
 
@@ -16,7 +16,6 @@ const RegisterForm: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { register } = useAuth();
-  const { showError, showSuccess } = useNotification();
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -58,12 +57,12 @@ const RegisterForm: React.FC = () => {
         password: formData.password,
         name: formData.name || undefined,
       });
-      showSuccess('Registration successful!');
+      toast.success('Registration successful!');
       navigate('/dashboard');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Registration error:', error);
-      const message = error.response?.data?.message || 'Registration failed. Please try again.';
-      showError(message);
+      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Registration failed. Please try again.';
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
