@@ -1,4 +1,4 @@
-import { Task, TaskStatus, Priority } from '@prisma/client';
+import { Task, TaskStatus, Priority, Category } from '@prisma/client';
 import { BaseRepository } from './baseRepository';
 
 export class TaskRepository extends BaseRepository<Task> {
@@ -38,6 +38,34 @@ export class TaskRepository extends BaseRepository<Task> {
     return this.findAll({
       where: { userId, priority },
       orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async findByUserIdWithSearchAndSort(
+    userId: string,
+    searchTerm?: string,
+    sortBy: 'createdAt' | 'title' = 'createdAt',
+    sortOrder: 'asc' | 'desc' = 'desc',
+    category?: Category,
+  ): Promise<Task[]> {
+
+    console.log('category', category);
+    const where: any = {
+      userId,
+      ...(category && { category }),
+      ...(searchTerm && {
+        OR: ['title', 'description'].map((field) => ({
+          [field]: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        })),
+      }),
+    };
+  
+    return this.findAll({
+      where,
+      orderBy: { [sortBy]: sortOrder },
     });
   }
 }

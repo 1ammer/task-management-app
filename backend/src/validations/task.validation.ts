@@ -50,7 +50,17 @@ export const deleteTaskSchema = z.object({
   }),
 });
 
+export const getAllTasksSchema = z.object({
+  query: z.object({
+    search: z.string().optional(),
+    category: categoryEnum.optional(),
+    sortBy: z.enum(['createdAt', 'title']).optional().default('createdAt'),
+    sortOrder: z.enum(['asc', 'desc']).optional().default('desc'),
+  }),
+});
+
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
 export type GetTaskInput = z.infer<typeof getTaskSchema>;
 export type DeleteTaskInput = z.infer<typeof deleteTaskSchema>;
+export type GetAllTasksInput = z.infer<typeof getAllTasksSchema>;
