@@ -18,17 +18,18 @@
   "author": "",
   "license": "ISC",
   "description": "",
-   "lint-staged": {
-  "*.{js,jsx,ts,tsx}": [
-    "eslint --fix",
-    "prettier --write"
-  ],
-  "*.{json,md,yml,yaml}": [
-    "prettier --write"
-  ]
-},
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
     "@eslint/js": "^9.34.0",
+    "@types/compression": "^1.8.1",
     "@types/cors": "^2.8.19",
     "@types/eslint__js": "^8.42.3",
     "@types/express": "^5.0.3",
@@ -49,8 +50,14 @@
     "typescript-eslint": "^8.42.0"
   },
   "dependencies": {
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
     "express": "^5.1.0",
-    "morgan": "^1.10.1"
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "http-status": "^2.1.0",
+    "morgan": "^1.10.1",
+    "winston": "^3.17.0"
   }
 }

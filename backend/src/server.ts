@@ -1,26 +1,37 @@
-import express, { type Application, Request, Response } from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
+import dotenv from 'dotenv';
+import { Server } from 'http';
 
-const app: Application = express();
-const PORT = process.env.PORT ?? 3000;
+// Load environment variables
+dotenv.config();
 
-// Middleware
-app.use(cors());
-app.use(morgan('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Import the express app
+import app from './app';
+import logger from './utils/logger';
 
-app.get("/health", (_req:Request, res:Response)=>{
+// Get port from environment and store in Express
+const port: number = parseInt(process.env.PORT || '3000', 10);
 
-  console.log("test husky");
-
-    res.status(200).json({message:"OK"})
-
-})
-
-
-
-app.listen(PORT, (): void => {
-  console.info(`Server is running on port ${PORT}`);
+// Start the server
+const server: Server = app.listen(port, () => {
+  logger.info(`Server running on port ${port}`);
+  logger.info(`Environment: ${process.env.NODE_ENV}`);
 });
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err: Error) => {
+  logger.error('UNHANDLED REJECTION! 💥 Shutting down...');
+  logger.error(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
+
+// Handle SIGTERM signal
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM RECEIVED. Shutting down gracefully');
+  server.close(() => {
+    logger.info('Process terminated!');
+  });
+});
+
+export default server;
