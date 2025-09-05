@@ -1,37 +1,54 @@
 import dotenv from 'dotenv';
 import { Server } from 'http';
 
-// Load environment variables
 dotenv.config();
 
-// Import the express app
 import app from './app';
 import logger from './utils/logger';
+import { connectDB, disconnectDB } from './utils/prismaClient';
 
-// Get port from environment and store in Express
 const port: number = parseInt(process.env.PORT || '3000', 10);
 
-// Start the server
-const server: Server = app.listen(port, () => {
-  logger.info(`Server running on port ${port}`);
-  logger.info(`Environment: ${process.env.NODE_ENV}`);
-});
+let server: Server;
 
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err: Error) => {
-  logger.error('UNHANDLED REJECTION! 💥 Shutting down...');
-  logger.error(err.name, err.message);
-  server.close(() => {
+connectDB()
+  .then(() => {
+    server = app.listen(port, () => {
+      logger.info(`Server running on port ${port}`);
+      logger.info(`Environment: ${process.env.NODE_ENV}`);
+    });
+  })
+  .catch((err) => {
+    logger.error('Failed to start server:', err);
     process.exit(1);
   });
+
+process.on('unhandledRejection', (err: Error) => {
+  logger.error('UNHANDLED REJECTION! Shutting down...');
+  logger.error(err.name, err.message);
+  if (server) {
+    server.close(() => {
+      disconnectDB().then(() => {
+        process.exit(1);
+      });
+    });
+  } else {
+    disconnectDB().then(() => {
+      process.exit(1);
+    });
+  }
 });
 
-// Handle SIGTERM signal
 process.on('SIGTERM', () => {
   logger.info('SIGTERM RECEIVED. Shutting down gracefully');
-  server.close(() => {
-    logger.info('Process terminated!');
-  });
+  if (server) {
+    server.close(async () => {
+      await disconnectDB();
+      logger.info('Process terminated!');
+    });
+  } else {
+    disconnectDB().then(() => {
+      logger.info('Process terminated!');
+    });
+  }
 });
-
-export default server;
