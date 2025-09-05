@@ -26,6 +26,8 @@ model Task {
   id          String    @id @default(uuid())
   title       String
   description String?
+  completed   Boolean  @default(false)
+  category    Category
   status      TaskStatus @default(TODO)
   priority    Priority   @default(MEDIUM)
   createdAt   DateTime   @default(now()) @map("created_at")
@@ -47,3 +49,12 @@ enum Priority {
   MEDIUM
   HIGH
 }
+
+enum Category {
+  WORK
+  PERSONAL
+  STUDY
+  HEALTH
+  OTHER
+}
+

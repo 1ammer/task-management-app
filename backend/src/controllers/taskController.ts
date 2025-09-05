@@ -26,11 +26,15 @@ export const getAllTasks = catchAsync(async (req: Request, res: Response) => {
 export const getTask = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
   const taskId = req.params.id;
-  
+
   if (!userId) {
     throw new ApiError('Unauthorized', 'Unauthorized', 401);
   }
-  
+
+  if (!taskId) {
+    throw new ApiError('Task ID is required', 'Task ID is required', 400);
+  }
+
   const task = await db.tasks.findById(taskId);
   
   if (!task) {
@@ -74,21 +78,25 @@ export const createTask = catchAsync(async (req: Request, res: Response) => {
 export const updateTask = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
   const taskId = req.params.id;
-  
+
   if (!userId) {
     throw new ApiError('Unauthorized', 'Unauthorized', 401);
   }
-  
+
+  if (!taskId) {
+    throw new ApiError('Task ID is required', 'Task ID is required', 400);
+  }
+
   const task = await db.tasks.findById(taskId);
-  
+
   if (!task) {
     throw new ApiError('Task not found', 'Task not found', 404);
   }
-  
+
   if (task.userId !== userId) {
     throw new ApiError('Forbidden', 'Forbidden', 403);
   }
-  
+
   const updatedTask = await db.tasks.update(taskId, req.body);
   
   res.status(200).json({
@@ -102,21 +110,25 @@ export const updateTask = catchAsync(async (req: Request, res: Response) => {
 export const deleteTask = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
   const taskId = req.params.id;
-  
+
   if (!userId) {
     throw new ApiError('Unauthorized', 'Unauthorized', 401);
   }
-  
+
+  if (!taskId) {
+    throw new ApiError('Task ID is required', 'Task ID is required', 400);
+  }
+
   const task = await db.tasks.findById(taskId);
-  
+
   if (!task) {
     throw new ApiError('Task not found', 'Task not found', 404);
   }
-  
+
   if (task.userId !== userId) {
     throw new ApiError('Forbidden', 'Forbidden', 403);
   }
-  
+
   await db.tasks.delete(taskId);
   
   res.status(204).json({
