@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import AuthRedirect from './components/common/AuthRedirect';
 import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
@@ -43,8 +44,22 @@ function AppContent() {
       />
       <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/register" element={<RegisterForm />} />
+            <Route 
+              path="/login" 
+              element={
+                <AuthRedirect>
+                  <LoginForm />
+                </AuthRedirect>
+              } 
+            />
+            <Route 
+              path="/register" 
+              element={
+                <AuthRedirect>
+                  <RegisterForm />
+                </AuthRedirect>
+              } 
+            />
             <Route
               path="/dashboard"
               element={
