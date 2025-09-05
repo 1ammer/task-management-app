@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { AxiosInstance, AxiosResponse } from 'axios';
 
+// Type imports
 export interface User {
   id: string;
   email: string;
@@ -21,6 +22,39 @@ export interface AuthResponse {
     user: User;
     tokens: AuthTokens;
   };
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  category: 'WORK' | 'PERSONAL' | 'STUDY' | 'HEALTH' | 'OTHER';
+  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
+  priority: 'LOW' | 'MEDIUM' | 'HIGH';
+  completed: boolean;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TasksResponse {
+  status: string;
+  results: number;
+  data: {
+    tasks: Task[];
+  };
+}
+
+export interface CreateTaskData {
+  title: string;
+  description?: string;
+  category: Task['category'];
+  status?: Task['status'];
+  priority?: Task['priority'];
+}
+
+export interface UpdateTaskData extends Partial<CreateTaskData> {
+  completed?: boolean;
 }
 
 export interface LoginData {
@@ -112,6 +146,31 @@ class ApiService {
     return response.data;
   }
 
+  // Task endpoints
+  async getTasks(): Promise<TasksResponse> {
+    const response: AxiosResponse<TasksResponse> = await this.api.get('/tasks');
+    return response.data;
+  }
+
+  async getTask(id: string): Promise<{ status: string; data: { task: Task } }> {
+    const response = await this.api.get(`/tasks/${id}`);
+    return response.data;
+  }
+
+  async createTask(data: CreateTaskData): Promise<{ status: string; data: { task: Task } }> {
+    const response = await this.api.post('/tasks', data);
+    return response.data;
+  }
+
+  async updateTask(id: string, data: UpdateTaskData): Promise<{ status: string; data: { task: Task } }> {
+    const response = await this.api.patch(`/tasks/${id}`, data);
+    return response.data;
+  }
+
+  async deleteTask(id: string): Promise<{ status: string; data: null }> {
+    const response = await this.api.delete(`/tasks/${id}`);
+    return response.data;
+  }
 }
 
 export default new ApiService();
