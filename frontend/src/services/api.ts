@@ -147,8 +147,9 @@ class ApiService {
   }
 
   // Task endpoints
-  async getTasks(): Promise<TasksResponse> {
-    const response: AxiosResponse<TasksResponse> = await this.api.get('/tasks');
+  async getTasks(queryParams?: string): Promise<TasksResponse> {
+    const url = queryParams ? `/tasks${queryParams}` : '/tasks';
+    const response: AxiosResponse<TasksResponse> = await this.api.get(url);
     return response.data;
   }
 
