@@ -44,7 +44,7 @@ export class TaskRepository extends BaseRepository<Task> {
   async findByUserIdWithSearchAndSort(
     userId: string,
     searchTerm?: string,
-    sortBy: 'createdAt' | 'title' = 'createdAt',
+    sortBy: 'createdAt' | 'title' | 'dueDate' = 'createdAt',
     sortOrder: 'asc' | 'desc' = 'desc',
     category?: Category,
   ): Promise<Task[]> {

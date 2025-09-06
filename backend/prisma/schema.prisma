@@ -30,6 +30,8 @@ model Task {
   category    Category
   status      TaskStatus @default(TODO)
   priority    Priority   @default(MEDIUM)
+  dueDate     DateTime?  @map("due_date")
+  progress    Int        @default(0) // 0-100 percentage
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
   userId      String     @map("user_id")

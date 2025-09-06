@@ -19,7 +19,7 @@ export const getAllTasks = catchAsync(async (req: Request, res: Response) => {
   const tasks = await db.tasks.findByUserIdWithSearchAndSort(
     userId,
     search as string,
-    sortBy as 'createdAt' | 'title',
+    sortBy as 'createdAt' | 'title' | 'dueDate',
     sortOrder as 'asc' | 'desc',
     category as Category,
     );

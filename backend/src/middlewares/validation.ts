@@ -4,11 +4,14 @@ import { ZodType, z } from 'zod'; // Use 'z' for ZodError and ZodType
 export const validate = (schema: ZodType) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse({
+      const result = schema.parse({
         body: req.body,
         query: req.query,
         params: req.params,
-      });
+      }) as { body: any; query: any; params: any };
+      
+      req.body = result.body;
+      
       next();
     } catch (error) {
       if (error instanceof z.ZodError) {
