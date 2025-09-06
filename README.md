@@ -52,7 +52,7 @@ Task Management App is a modern web application designed to help users organize 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/task-management-app.git
+   git clone https://github.com/1ammer/task-management-app.git
    cd task-management-app/backend
    ```
 
@@ -73,8 +73,8 @@ Task Management App is a modern web application designed to help users organize 
    
    # JWT
    JWT_SECRET="your-jwt-secret"
-   JWT_ACCESS_EXPIRATION=15m
-   JWT_REFRESH_EXPIRATION=7d
+   JWT_EXPIRES_IN=15m
+   REFRESH_TOKEN_EXPIRES_IN=7d
    ```
 
 4. Set up the database:
