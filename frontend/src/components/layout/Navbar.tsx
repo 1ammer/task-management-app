@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../hooks/useAuth';
 import ConnectionStatus from '../common/ConnectionStatus';
+import ThemeToggle from '../common/ThemeToggle';
 import './Navbar.css';
 
 const Navbar: React.FC = () => {
@@ -23,6 +24,7 @@ const Navbar: React.FC = () => {
             TaskManager
           </Link>
           <div className="navbar-links">
+            <ThemeToggle />
             <Link to="/login" className="navbar-link">Login</Link>
             <Link to="/register" className="navbar-link navbar-link-primary">Sign Up</Link>
           </div>
@@ -44,6 +46,7 @@ const Navbar: React.FC = () => {
         </div>
 
         <div className="navbar-user">
+          <ThemeToggle />
           <ConnectionStatus />
           <span className="navbar-user-name">
             Welcome, {user?.name || user?.email}

@@ -1,7 +1,7 @@
 .navbar {
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px 0 var(--shadow-color);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -20,13 +20,13 @@
 .navbar-brand {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #646cff;
+  color: var(--accent-color);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .navbar-brand:hover {
-  color: #535bf2;
+  color: var(--accent-hover);
 }
 
 .navbar-center {
@@ -42,7 +42,7 @@
 }
 
 .navbar-link {
-  color: #374151;
+  color: var(--text-primary);
   text-decoration: none;
   font-weight: 500;
   padding: 8px 16px;
@@ -51,8 +51,8 @@
 }
 
 .navbar-link:hover {
-  color: #646cff;
-  background-color: #f8fafc;
+  color: var(--accent-color);
+  background-color: var(--bg-secondary);
 }
 
 .navbar-link-primary {
@@ -73,15 +73,15 @@
 }
 
 .navbar-user-name {
-  color: #374151;
+  color: var(--text-primary);
   font-weight: 500;
   font-size: 0.875rem;
 }
 
 .navbar-logout {
   background: none;
-  border: 1px solid #d1d5db;
-  color: #374151;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 0.875rem;
@@ -91,8 +91,8 @@
 }
 
 .navbar-logout:hover {
-  background-color: #f3f4f6;
-  border-color: #9ca3af;
+  background-color: var(--bg-secondary);
+  border-color: var(--border-hover);
 }
 
 @media (max-width: 768px) {
