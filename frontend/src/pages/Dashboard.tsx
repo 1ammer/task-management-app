@@ -6,6 +6,7 @@ import type { Task } from '../services/api';
 import TaskCard from '../components/tasks/TaskCard';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { useDebounce } from '../utils/debounce';
+import { useSocket } from '../hooks/useSocket';
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
@@ -20,6 +21,9 @@ const Dashboard: React.FC = () => {
 
   // Use debounced search value
   const debouncedSearch = useDebounce(searchInput, 300);
+
+  // Socket connection for real-time updates
+  const { onTaskCreated, onTaskUpdated, onTaskDeleted } = useSocket();
 
   // Memoize filter object to prevent unnecessary re-renders
   const filter = useMemo(() => ({
@@ -58,6 +62,54 @@ const Dashboard: React.FC = () => {
     
     loadTasks();
   }, [filter, isInitialLoad]);
+
+  // Real-time event listeners
+  useEffect(() => {
+    const unsubscribeCreated = onTaskCreated((task: Task) => {
+      setTasks(prev => {
+        // Check if task already exists to avoid duplicates
+        const exists = prev.some(t => t.id === task.id);
+        if (exists) return prev;
+        
+        // Show toast notification
+        toast.success(`New task "${task.title}" created!`);
+        return [task, ...prev];
+      });
+    });
+
+    const unsubscribeUpdated = onTaskUpdated((updatedTask: Task) => {
+      setTasks(prev => {
+        const updated = prev.map(task => 
+          task.id === updatedTask.id ? updatedTask : task
+        );
+        
+        // Only show toast if the task was actually in our current list
+        const wasInList = prev.some(t => t.id === updatedTask.id);
+        if (wasInList) {
+          toast.success(`Task "${updatedTask.title}" updated!`);
+        }
+        
+        return updated;
+      });
+    });
+
+    const unsubscribeDeleted = onTaskDeleted((taskId: string) => {
+      setTasks(prev => {
+        const taskToDelete = prev.find(t => t.id === taskId);
+        if (taskToDelete) {
+          toast.success(`Task "${taskToDelete.title}" deleted!`);
+        }
+        return prev.filter(task => task.id !== taskId);
+      });
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      unsubscribeCreated();
+      unsubscribeUpdated();
+      unsubscribeDeleted();
+    };
+  }, [onTaskCreated, onTaskUpdated, onTaskDeleted]);
 
 
 

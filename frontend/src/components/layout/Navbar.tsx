@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../hooks/useAuth';
+import ConnectionStatus from '../common/ConnectionStatus';
 import './Navbar.css';
 
 const Navbar: React.FC = () => {
@@ -43,6 +44,7 @@ const Navbar: React.FC = () => {
         </div>
 
         <div className="navbar-user">
+          <ConnectionStatus />
           <span className="navbar-user-name">
             Welcome, {user?.name || user?.email}
           </span>
