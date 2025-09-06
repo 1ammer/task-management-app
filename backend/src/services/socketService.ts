@@ -14,9 +14,11 @@ export class SocketService {
   private io: SocketIOServer | null = null;
   private connectedUsers: Map<string, Set<string>> = new Map(); // userId -> socketIds
   private db: DbService;
+  private serverStartTime: Date;
 
   private constructor() {
     this.db = DbService.getInstance();
+    this.serverStartTime = new Date();
   }
 
   public static getInstance(): SocketService {
@@ -39,6 +41,9 @@ export class SocketService {
 
     this.setupMiddleware();
     this.setupEventHandlers();
+    
+    // Update server start time on initialization
+    this.serverStartTime = new Date();
     
     logger.info('Socket.IO server initialized');
   }
@@ -85,6 +90,13 @@ export class SocketService {
 
       // Join user to their personal room for targeted messages
       socket.join(`user:${socket.userId}`);
+      
+      // Send server info to client on connection
+      socket.emit('server-info', {
+        serverStartTime: this.serverStartTime,
+        serverUptime: Date.now() - this.serverStartTime.getTime(),
+        connectedUsers: this.getConnectedUsersCount(),
+      });
 
       // Handle disconnection
       socket.on('disconnect', (reason) => {
@@ -106,6 +118,15 @@ export class SocketService {
       socket.on('leave-task', (taskId: string) => {
         socket.leave(`task:${taskId}`);
         logger.info(`User ${socket.userEmail} left task room: ${taskId}`);
+      });
+      
+      // Handle client reconnection check
+      socket.on('check-connection', () => {
+        socket.emit('connection-confirmed', {
+          userId: socket.userId,
+          socketId: socket.id,
+          serverTime: new Date(),
+        });
       });
     });
   }
