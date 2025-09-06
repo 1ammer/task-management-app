@@ -83,12 +83,6 @@ const Dashboard: React.FC = () => {
           task.id === updatedTask.id ? updatedTask : task
         );
         
-        // Only show toast if the task was actually in our current list
-        const wasInList = prev.some(t => t.id === updatedTask.id);
-        if (wasInList) {
-          toast.success(`Task "${updatedTask.title}" updated!`);
-        }
-        
         return updated;
       });
     });
