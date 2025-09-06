@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import apiService, { type Task, type CreateTaskData } from '../../services/api';
 import LoadingSpinner from '../common/LoadingSpinner';
+import DatePicker from '../common/DatePicker';
 import './TaskForm.css';
 
 interface TaskFormProps {
@@ -20,6 +21,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit }) => {
     category: task?.category || 'PERSONAL',
     status: task?.status || 'TODO',
     priority: task?.priority || 'MEDIUM',
+    dueDate: task?.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : '',
+    progress: task?.progress || 0,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -76,10 +79,16 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit }) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    
+    let processedValue: any = value;
+    if (type === 'range' || name === 'progress') {
+      processedValue = parseInt(value, 10);
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: processedValue,
     }));
     
     // Clear error when user starts typing
@@ -188,6 +197,43 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit }) => {
                 <option value="IN_PROGRESS">In Progress</option>
                 <option value="DONE">Done</option>
               </select>
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="dueDate" className="form-label">Due Date</label>
+              <DatePicker
+                id="dueDate"
+                name="dueDate"
+                value={formData.dueDate || ''}
+                onChange={(value) => setFormData(prev => ({ ...prev, dueDate: value }))}
+                placeholder="Select due date"
+                disabled={isLoading}
+                className="form-input"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="progress" className="form-label">
+                Progress: {formData.progress}%
+              </label>
+              <input
+                type="range"
+                id="progress"
+                name="progress"
+                min="0"
+                max="100"
+                value={formData.progress || 0}
+                onChange={handleChange}
+                className="form-range"
+                disabled={isLoading}
+              />
+              <div className="progress-labels">
+                <span>0%</span>
+                <span>50%</span>
+                <span>100%</span>
+              </div>
             </div>
           </div>
 

@@ -32,6 +32,8 @@ export interface Task {
   status: 'TODO' | 'IN_PROGRESS' | 'DONE';
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   completed: boolean;
+  dueDate?: string;
+  progress: number;
   userId: string;
   createdAt: string;
   updatedAt: string;
@@ -51,6 +53,8 @@ export interface CreateTaskData {
   category: Task['category'];
   status?: Task['status'];
   priority?: Task['priority'];
+  dueDate?: string;
+  progress?: number;
 }
 
 export interface UpdateTaskData extends Partial<CreateTaskData> {

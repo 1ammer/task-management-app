@@ -44,6 +44,32 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate, onDelete }) => {
     return new Date(dateString).toLocaleDateString();
   };
 
+  const formatDueDate = (dateString: string) => {
+    const dueDate = new Date(dateString);
+    const now = new Date();
+    const diffTime = dueDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 0) {
+      return { text: `Overdue by ${Math.abs(diffDays)} days`, className: 'overdue' };
+    } else if (diffDays === 0) {
+      return { text: 'Due today', className: 'due-today' };
+    } else if (diffDays === 1) {
+      return { text: 'Due tomorrow', className: 'due-soon' };
+    } else if (diffDays <= 3) {
+      return { text: `Due in ${diffDays} days`, className: 'due-soon' };
+    } else {
+      return { text: `Due ${dueDate.toLocaleDateString()}`, className: 'due-normal' };
+    }
+  };
+
+  const getProgressColor = (progress: number) => {
+    if (progress === 0) return '#6b7280';
+    if (progress < 50) return '#f59e0b';
+    if (progress < 100) return '#3b82f6';
+    return '#10b981';
+  };
+
   const handleToggleComplete = async () => {
     setIsLoading(true);
     try {
@@ -135,6 +161,27 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate, onDelete }) => {
 
       {task.description && (
         <p className="task-description">{task.description}</p>
+      )}
+
+      <div className="task-progress">
+        <div className="progress-bar">
+          <div 
+            className="progress-fill"
+            style={{ 
+              width: `${task.progress}%`,
+              backgroundColor: getProgressColor(task.progress)
+            }}
+          />
+        </div>
+        <span className="progress-text">{task.progress}% Complete</span>
+      </div>
+
+      {task.dueDate && (
+        <div className="task-due-date">
+          <span className={`due-date-badge ${formatDueDate(task.dueDate).className}`}>
+            📅 {formatDueDate(task.dueDate).text}
+          </span>
+        </div>
       )}
 
       <div className="task-footer">

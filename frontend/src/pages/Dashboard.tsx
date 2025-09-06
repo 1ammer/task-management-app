@@ -15,6 +15,8 @@ const Dashboard: React.FC = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [searchInput, setSearchInput] = useState('');
   const [category, setCategory] = useState('ALL');
+  const [sortBy, setSortBy] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
   
   // Ref to maintain focus on search input
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -28,8 +30,10 @@ const Dashboard: React.FC = () => {
   // Memoize filter object to prevent unnecessary re-renders
   const filter = useMemo(() => ({
     category,
-    search: debouncedSearch
-  }), [category, debouncedSearch]);
+    search: debouncedSearch,
+    sortBy,
+    sortOrder
+  }), [category, debouncedSearch, sortBy, sortOrder]);
 
   useEffect(() => {
     const loadTasks = async () => {
@@ -46,6 +50,12 @@ const Dashboard: React.FC = () => {
         }
         if (filter.search.trim()) {
           params.append('search', filter.search.trim());
+        }
+        if (filter.sortBy) {
+          params.append('sortBy', filter.sortBy);
+        }
+        if (filter.sortOrder) {
+          params.append('sortOrder', filter.sortOrder);
         }
         
         const queryString = params.toString();
@@ -130,6 +140,16 @@ const Dashboard: React.FC = () => {
   const handleClearFilters = useCallback(() => {
     setSearchInput('');
     setCategory('ALL');
+    setSortBy('createdAt');
+    setSortOrder('desc');
+  }, []);
+
+  const handleSortByChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(e.target.value);
+  }, []);
+
+  const handleSortOrderChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOrder(e.target.value);
   }, []);
 
 
@@ -207,6 +227,33 @@ const Dashboard: React.FC = () => {
               <option value="STUDY">Study</option>
               <option value="HEALTH">Health</option>
               <option value="OTHER">Other</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label htmlFor="sort-by-filter" className="filter-label">Sort By:</label>
+            <select
+              id="sort-by-filter"
+              value={sortBy}
+              onChange={handleSortByChange}
+              className="filter-select"
+            >
+              <option value="createdAt">Created Date</option>
+              <option value="title">Title</option>
+              <option value="dueDate">Due Date</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label htmlFor="sort-order-filter" className="filter-label">Order:</label>
+            <select
+              id="sort-order-filter"
+              value={sortOrder}
+              onChange={handleSortOrderChange}
+              className="filter-select"
+            >
+              <option value="desc">Newest First</option>
+              <option value="asc">Oldest First</option>
             </select>
           </div>
 
