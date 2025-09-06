@@ -3,6 +3,7 @@ import { DbService } from '../services';
 import catchAsync from '../utils/catchAsync';
 import ApiError from '../utils/apiError';
 import { Category } from '@prisma/client';
+import socketService from '../services/socketService';
 
 const db = DbService.getInstance();
 
@@ -72,6 +73,9 @@ export const createTask = catchAsync(async (req: Request, res: Response) => {
 
   const task = await db.tasks.create(taskData);
 
+  // Emit real-time event
+  socketService.emitTaskCreated(task);
+
   res.status(201).json({
     status: 'success',
     data: {
@@ -100,6 +104,9 @@ export const updateTask = catchAsync(async (req: Request, res: Response) => {
 
   const updatedTask = await db.tasks.update(taskId, req.body);
 
+  // Emit real-time event
+  socketService.emitTaskUpdated(updatedTask);
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -127,6 +134,9 @@ export const deleteTask = catchAsync(async (req: Request, res: Response) => {
   }
 
   await db.tasks.delete(taskId);
+
+  // Emit real-time event
+  socketService.emitTaskDeleted(taskId, userId);
 
   res.status(204).json({
     status: 'success',
