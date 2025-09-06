@@ -38,7 +38,8 @@ class SocketService {
       return;
     }
 
-    const serverUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+    const serverUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
+
 
     this.socket = io(serverUrl, {
       auth: {
@@ -51,6 +52,7 @@ class SocketService {
       reconnectionAttempts: this.maxReconnectAttempts,
       reconnectionDelay: this.reconnectInterval,
       timeout: 20000,
+      path: '/socket.io',
     });
 
     this.setupEventHandlers();

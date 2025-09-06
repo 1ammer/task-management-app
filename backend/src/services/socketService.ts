@@ -37,7 +37,12 @@ export class SocketService {
       },
       pingTimeout: 60000,
       pingInterval: 25000,
+      path: '/socket.io', // Explicitly set the default Socket.IO path
     });
+
+    // Log the server configuration for debugging
+    logger.info(`Socket.IO server initialized with path: /socket.io`);
+    logger.info(`CORS origin: ${process.env.CLIENT_URL || "http://localhost:5173"}`);
 
     this.setupMiddleware();
     this.setupEventHandlers();
@@ -45,7 +50,7 @@ export class SocketService {
     // Update server start time on initialization
     this.serverStartTime = new Date();
     
-    logger.info('Socket.IO server initialized');
+    logger.info('Socket.IO server fully initialized and ready');
   }
 
   private setupMiddleware(): void {
