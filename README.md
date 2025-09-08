@@ -84,7 +84,8 @@ Task Management App is a modern web application designed to help users organize 
    ```env
    DATABASE_URL="postgresql://postgres:password@localhost:5432/task_management_db"
    JWT_SECRET="your-super-secret-jwt-key-change-in-production-12345"
-   JWT_EXPIRES_IN="7d"
+   JWT_EXPIRES_IN="1h"
+   REFRESH_TOKEN_EXPIRES_IN="7d"
    PORT=4000
    NODE_ENV="development"
    FRONTEND_URL="http://localhost:5173"
@@ -116,7 +117,7 @@ Task Management App is a modern web application designed to help users organize 
 3. Create a `.env` file:
    ```env
    VITE_API_URL=http://localhost:4000/api/v1
-   VITE_API_BASE_URL=http://localhost:4000
+   VITE_SOCKET_URL=http://localhost:4000
    ```
 
 4. Start the development server:
@@ -167,7 +168,8 @@ sudo -u postgres createdb task_management_db
 | `PORT` | Server port | 4000 |
 | `NODE_ENV` | Environment (development/production) | development |
 | `JWT_SECRET` | Secret for JWT signing | - |
-| `JWT_EXPIRES_IN` | JWT token expiration time | 7d |
+| `JWT_EXPIRES_IN` | JWT token expiration time | 1h |
+| `REFRESH_TOKEN_EXPIRES_IN` | Refresh token expiration time | 7d |
 | `FRONTEND_URL` | Frontend URL for CORS | http://localhost:5173 |
 
 ### Frontend
@@ -175,7 +177,7 @@ sudo -u postgres createdb task_management_db
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `VITE_API_URL` | Backend API URL | http://localhost:4000/api/v1 |
-| `VITE_API_BASE_URL` | Backend base URL | http://localhost:4000 |
+| `VITE_SOCKET_URL` | Backend base URL | http://localhost:4000 |
 
 ## API Endpoints Documentation
 
