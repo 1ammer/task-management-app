@@ -13,6 +13,7 @@ export interface User {
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
+  accessTokenExpiry: number;
 }
 
 export interface AuthResponse {
@@ -129,20 +130,22 @@ class ApiService {
                 refreshToken,
               });
 
-              const { accessToken, refreshToken: newRefreshToken } = response.data.data.tokens;
+              const { accessToken, refreshToken: newRefreshToken, accessTokenExpiry } = response.data.data.tokens;
               localStorage.setItem('accessToken', accessToken);
               localStorage.setItem('refreshToken', newRefreshToken);
+              localStorage.setItem('accessTokenExpiry', accessTokenExpiry.toString());
 
               // Retry the original request
               originalRequest.headers.Authorization = `Bearer ${accessToken}`;
               return this.api(originalRequest);
             }
-                     } catch {
-             // Refresh failed, redirect to login
-             localStorage.removeItem('accessToken');
-             localStorage.removeItem('refreshToken');
-             window.location.href = '/login';
-           }
+          } catch {
+            // Refresh failed, redirect to login
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('accessTokenExpiry');
+            window.location.href = '/login';
+          }
         }
 
         return Promise.reject(error);

@@ -26,6 +26,7 @@ export interface RegisterData {
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
+  accessTokenExpiry: number;
 }
 
 export class AuthService {
@@ -69,7 +70,18 @@ export class AuthService {
       { expiresIn: this.refreshTokenExpiresIn } as jwt.SignOptions
     );
 
-    return { accessToken, refreshToken };
+    // Calculate expiry timestamp in milliseconds
+    const expiryDuration = this.jwtExpiresIn.endsWith('h') 
+      ? parseInt(this.jwtExpiresIn) * 60 * 60 * 1000 
+      : this.jwtExpiresIn.endsWith('m') 
+        ? parseInt(this.jwtExpiresIn) * 60 * 1000
+        : this.jwtExpiresIn.endsWith('d')
+          ? parseInt(this.jwtExpiresIn) * 24 * 60 * 60 * 1000
+          : parseInt(this.jwtExpiresIn) * 1000; // Default to seconds
+    
+    const accessTokenExpiry = Date.now() + expiryDuration;
+
+    return { accessToken, refreshToken, accessTokenExpiry };
   }
 
   verifyToken(token: string): AuthUser {
