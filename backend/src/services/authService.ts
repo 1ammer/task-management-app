@@ -58,7 +58,7 @@ export class AuthService {
 
   generateTokens(user: AuthUser): AuthTokens {
     const accessToken = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, name: user.name },
       this.jwtSecret,
       { expiresIn: this.jwtExpiresIn } as jwt.SignOptions
     );
@@ -78,6 +78,7 @@ export class AuthService {
       return {
         id: decoded.id,
         email: decoded.email,
+        name: decoded.name,
       };
     } catch (error) {
       throw new ApiError('Invalid token', 'Invalid token', 401);
@@ -150,5 +151,9 @@ export class AuthService {
     } catch (error) {
       throw new ApiError('Invalid refresh token', 'Invalid refresh token', 401);
     }
+  }
+
+  async getUserById(userId: string): Promise<User | null> {
+    return db.users.findById(userId);
   }
 }

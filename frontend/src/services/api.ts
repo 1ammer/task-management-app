@@ -70,6 +70,22 @@ export interface RegisterData extends LoginData {
   name?: string;
 }
 
+export interface UpdateProfileData {
+  name?: string;
+}
+
+export interface ChangePasswordData {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ProfileResponse {
+  status: string;
+  data: { user: User };
+  message?: string;
+}
+
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1';
 
 class ApiService {
@@ -176,6 +192,23 @@ class ApiService {
     const response = await this.api.delete(`/tasks/${id}`);
     return response.data;
   }
+
+  // Profile endpoints
+  async getProfile(): Promise<ProfileResponse> {
+    const response: AxiosResponse<ProfileResponse> = await this.api.get('/profile');
+    return response.data;
+  }
+
+  async updateProfile(data: UpdateProfileData): Promise<ProfileResponse> {
+    const response: AxiosResponse<ProfileResponse> = await this.api.put('/profile', data);
+    return response.data;
+  }
+
+  async changePassword(data: ChangePasswordData): Promise<{ status: string; message: string }> {
+    const response = await this.api.post('/profile/change-password', data);
+    return response.data;
+  }
+
 }
 
 export default new ApiService();

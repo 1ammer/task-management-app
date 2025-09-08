@@ -253,7 +253,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit }) => {
             >
               {isLoading ? (
                 <>
-                  <LoadingSpinner size="small" color="white" />
+                  <LoadingSpinner size="small" color="white" inline />
                   <span>{isEditing ? 'Updating...' : 'Creating...'}</span>
                 </>
               ) : (

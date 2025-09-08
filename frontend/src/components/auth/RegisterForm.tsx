@@ -21,6 +21,12 @@ const RegisterForm: React.FC = () => {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters long';
+    }
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -92,17 +98,19 @@ const RegisterForm: React.FC = () => {
         
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="name" className="form-label">Name (optional)</label>
+            <label htmlFor="name" className="form-label">Name *</label>
             <input
               type="text"
               id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="form-input"
+              className={`form-input ${errors.name ? 'error' : ''}`}
               placeholder="Enter your name"
               disabled={isLoading}
+              required
             />
+            {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
 
           <div className="form-group">
@@ -157,7 +165,7 @@ const RegisterForm: React.FC = () => {
           >
             {isLoading ? (
               <>
-                <LoadingSpinner size="small" color="white" />
+                <LoadingSpinner size="small" color="white" inline />
                 <span>Creating account...</span>
               </>
             ) : (

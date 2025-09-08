@@ -38,6 +38,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(null);
   };
 
+  const updateUser = (userData: User) => {
+    setUser(userData);
+  };
+
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem('accessToken');
@@ -66,6 +70,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         login,
         register,
         logout,
+        updateUser,
       }}
     >
       {children}

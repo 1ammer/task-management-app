@@ -43,6 +43,7 @@ const Navbar: React.FC = () => {
         <div className="navbar-center">
           <Link to="/dashboard" className="navbar-link">Dashboard</Link>
           <Link to="/tasks/new" className="navbar-link">New Task</Link>
+          <Link to="/profile" className="navbar-link">Profile</Link>
         </div>
 
         <div className="navbar-user">

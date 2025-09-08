@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import CreateTask from './pages/CreateTask';
 import EditTask from './pages/EditTask';
+import Profile from './pages/Profile';
 import LoginForm from './components/auth/LoginForm';
 import RegisterForm from './components/auth/RegisterForm';
 import './App.css';
@@ -83,6 +84,14 @@ function AppContent() {
               element={
                 <ProtectedRoute>
                   <EditTask />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               }
             />

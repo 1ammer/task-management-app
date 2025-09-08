@@ -6,6 +6,11 @@
   min-height: 200px;
 }
 
+.loading-spinner-container.inline {
+  min-height: auto;
+  height: auto;
+}
+
 .loading-spinner {
   border: 3px solid #f3f3f3;
   border-top: 3px solid #646cff;

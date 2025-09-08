@@ -55,9 +55,9 @@ export const refreshToken = catchAsync(async (req: Request, res: Response): Prom
 });
 
 export const getCurrentUser = catchAsync(async (req: Request, res: Response): Promise<void> => {
-  const user = req.user;
+  const userId = req.user?.id;
 
-  if (!user) {
+  if (!userId) {
     res.status(401).json({
       status: 'error',
       message: 'User not authenticated',
@@ -65,10 +65,21 @@ export const getCurrentUser = catchAsync(async (req: Request, res: Response): Pr
     return;
   }
 
+  const user = await authService.getUserById(userId);
+  if (!user) {
+    res.status(404).json({
+      status: 'error',
+      message: 'User not found',
+    });
+    return;
+  }
+
+  const { password, ...userWithoutPassword } = user;
+
   res.status(200).json({
     status: 'success',
     data: {
-      user,
+      user: userWithoutPassword,
     },
   });
 });

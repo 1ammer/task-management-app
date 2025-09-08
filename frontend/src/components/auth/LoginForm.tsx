@@ -117,7 +117,7 @@ const LoginForm: React.FC = () => {
           >
             {isLoading ? (
               <>
-                <LoadingSpinner size="small" color="white" />
+                <LoadingSpinner size="small" color="white" inline />
                 <span>Signing in...</span>
               </>
             ) : (
