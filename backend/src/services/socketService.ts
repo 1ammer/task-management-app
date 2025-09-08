@@ -65,7 +65,8 @@ export class SocketService {
           return next(new Error('Authentication token required'));
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret') as any;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key') as any;
+        console.log('decoded', decoded);
         
         // Verify user exists in database
         const user = await this.db.users.findById(decoded.id);
